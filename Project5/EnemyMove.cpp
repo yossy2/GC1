@@ -1,6 +1,7 @@
 #include <cmath>
 #include "EnemyMove.h"
 #include <_DebugConOut.h>
+#include <_DebugDispOut.h>
 #include <Scene\SceneMng.h>
 
 EnemyMove::EnemyMove(Vector2Dbl& pos,double& rad) :_pos(pos),_rad(rad)
@@ -74,7 +75,7 @@ void EnemyMove::SetMovePrg(void)
 
 	case MOVE_TYPE::PIT_IN:
 		// äiî[èÍèäÇÕç∂âEÇ…ìÆÇ≠ÇÃÇ≈ïŒç∑Ç≈ë_Ç§
-		_endPos.x += static_cast<double>((lpSceneMng.frameCnt() % 160) - ((lpSceneMng.frameCnt() % 160) / 80) * (80 - (lpSceneMng.frameCnt() % 80)));
+		_endPos.x += static_cast<double>(((lpSceneMng.frameCnt() + PIT_IN_CNT_MAX) % 200) - (((lpSceneMng.frameCnt() + PIT_IN_CNT_MAX) % 200) * 2 / 200) * 2 * ((lpSceneMng.frameCnt() + PIT_IN_CNT_MAX) % (200 / 2)));
 		_enemyMoveType = &EnemyMove::PitIn;
 		_length = { (_endPos.x - _startPos.x) ,(_endPos.y - _startPos.y) };
 
@@ -87,6 +88,10 @@ void EnemyMove::SetMovePrg(void)
 		_enemyMoveType = &EnemyMove::MoveLR;
 		break;
 
+	case MOVE_TYPE::SPREAD:
+		_movePerFrame = (_endPos - _startPos) / static_cast<double>(SPREAD_CNT_MAX);
+		_enemyMoveType = &EnemyMove::Spread;
+		break;
 	default:
 		AST();
 		_enemyMoveType = &EnemyMove::Wait;
@@ -224,5 +229,20 @@ void EnemyMove::Wait(void)
 // ç∂âEà⁄ìÆ
 void EnemyMove::MoveLR(void)
 {
-	_pos.x = _endPos.x + static_cast<double>((lpSceneMng.frameCnt() % 160) - ((lpSceneMng.frameCnt() % 160) / 80) * (80 - (lpSceneMng.frameCnt() % 80)));
+	_pos.x += static_cast<double>(1 - ((lpSceneMng.frameCnt() % 200) * 2 / 200) * 2);
+
+	if (_moveCnt >= static_cast<int>(_endPos.x) && (lpSceneMng.frameCnt() % 100) == 50)
+	{
+		SetMovePrg();
+		return;
+	}
+
+	_moveCnt++;
+}
+
+// é˚èk
+void EnemyMove::Spread(void)
+{
+	_pos += _movePerFrame * static_cast<double>(1 - ((_moveCnt % SPREAD_CNT_MAX) * 2 / SPREAD_CNT_MAX) * 2);
+	_moveCnt++;
 }

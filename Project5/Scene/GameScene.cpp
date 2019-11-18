@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <DxLib.h>
 #include <_DebugConOut.h>
+#include <_DebugDispOut.h>
 #include <ImageMng.h>
 #include "SceneMng.h"
 #include "GameScene.h"
@@ -53,10 +54,16 @@ GameScene::GameScene()
 									              (32.0 + 3.0) * static_cast<double>(y) + 16.0 + 40.0
 									  });
 
+			// LRはendPosのxに終了までのフレーム数を入れる
 			tmpMoveState.emplace_back(MOVE_TYPE::LR, 
-									  Vector2Dbl{ (30.0 + 10.0) * static_cast<double>(x) + 15.0,
-												  (32.0 + 3.0) * static_cast<double>(y) + 16.0 + 40.0 
+									  Vector2Dbl{ static_cast<double>((5 * 10 - (x + y * 10) - 1) * 30.0),
+												  0.0 
 									  });
+
+			tmpMoveState.emplace_back(MOVE_TYPE::SPREAD,
+				Vector2Dbl{ static_cast<double>((lpSceneMng.GameScreenSize.x / 10) * x + 15.0),
+							(42.0) * static_cast<double>(y) + 16.0
+				});
 
 			// 830:画面の幅+敵オブジェクトの幅
 			// 268:{(画面下端 - プレイヤーの高さ - 敵の高さの半分) - (画面上端 + 敵の高さの半分)} / 2
@@ -92,6 +99,7 @@ unique_Base GameScene::Update(unique_Base own)
 	{
 		(*data).Draw();
 	}
+	_dbgDrawCircle(((lpSceneMng.frameCnt() % 160) - ((lpSceneMng.frameCnt() % 160) / 80) * 2 * (lpSceneMng.frameCnt() % 80)), 15, 15, 0xff0000, true);
 
 	// 死んでいる（爆発が終了している）オブジェクトの削除
 	_objList.erase(

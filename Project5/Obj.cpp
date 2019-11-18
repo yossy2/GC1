@@ -62,7 +62,6 @@ void Obj::Draw(void)
 
 void Obj::Draw(int id)
 {
-	_dbgDrawBox(_pos.x - 15,_pos.y - 15, _pos.x + 15, _pos.y + 15,0xff0000,true);
 	lpSceneMng.AddDrawQue({ id,
 							_pos.x + static_cast<double>(SceneMng::GetInstance().GameScreenOffSet.x),
 					        _pos.y + static_cast<double>(SceneMng::GetInstance().GameScreenOffSet.y),

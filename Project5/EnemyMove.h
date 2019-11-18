@@ -8,6 +8,7 @@
 #define SIGMOID_CNT_MAX 120		// シグモイド移動の時の移動時間
 #define SPIRAL_CNT_MAX 120		// SPIRAL移動の時の移動時間
 #define SPIRAL_RADIUS 70		// SPIRAL移動の初期半径
+#define SPREAD_CNT_MAX 120		// 拡散するときの周期
 
 // 敵の移動タイプ
 enum class MOVE_TYPE
@@ -17,6 +18,7 @@ enum class MOVE_TYPE
 	SPIRAL,
 	PIT_IN,
 	LR,
+	SPREAD,
 };
 
 // 左右移動の方向
@@ -46,6 +48,7 @@ private:
 	void PitIn(void);								// 指定位置に等速直線移動で向かう
 	void Wait(void);								// 待機(移動なし)
 	void MoveLR(void);								// 左右移動
+	void Spread(void);								// 拡散運動
 
 	// 移動制御で使う変数
 	// 共通
