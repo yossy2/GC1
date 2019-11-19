@@ -75,7 +75,13 @@ void EnemyMove::SetMovePrg(void)
 
 	case MOVE_TYPE::PIT_IN:
 		// 格納場所は左右に動くので偏差で狙う
-		_endPos.x += static_cast<double>(((lpSceneMng.frameCnt() + PIT_IN_CNT_MAX) % 200) - (((lpSceneMng.frameCnt() + PIT_IN_CNT_MAX) % 200) * 2 / 200) * 2 * ((lpSceneMng.frameCnt() + PIT_IN_CNT_MAX) % (200 / 2)));
+		// 到達するフレームは,移動開始フレーム(ここが呼ばれるのが前の移動の終了時なので,[現在のフレーム数 + 1]) + 移動フレーム数
+		_endPos.x += static_cast<double>(((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % 200)
+				  - (((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % 200) * 2 / 200) 
+			      * 2 * ((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % (200 / 2)));
+		// ここの200は, {500(GameScreenSize.x) - 400(敵が格納されるエリアの横幅40 * 10)} * 2(往復分)
+		// moveLRにも使ってるのでそのうち直そう
+
 		_enemyMoveType = &EnemyMove::PitIn;
 		_length = { (_endPos.x - _startPos.x) ,(_endPos.y - _startPos.y) };
 
@@ -89,7 +95,7 @@ void EnemyMove::SetMovePrg(void)
 		break;
 
 	case MOVE_TYPE::SPREAD:
-		_movePerFrame = (_endPos - _startPos) / static_cast<double>(SPREAD_CNT_MAX);
+		_movePerFrame = (_endPos - _startPos) / static_cast<double>(SPREAD_CNT_MAX / 2);
 		_enemyMoveType = &EnemyMove::Spread;
 		break;
 	default:
@@ -229,6 +235,8 @@ void EnemyMove::Wait(void)
 // 左右移動
 void EnemyMove::MoveLR(void)
 {
+	_moveCnt++;
+
 	_pos.x += static_cast<double>(1 - ((lpSceneMng.frameCnt() % 200) * 2 / 200) * 2);
 
 	if (_moveCnt >= static_cast<int>(_endPos.x) && (lpSceneMng.frameCnt() % 100) == 50)
@@ -236,13 +244,12 @@ void EnemyMove::MoveLR(void)
 		SetMovePrg();
 		return;
 	}
-
-	_moveCnt++;
 }
 
 // 収縮
 void EnemyMove::Spread(void)
 {
-	_pos += _movePerFrame * static_cast<double>(1 - ((_moveCnt % SPREAD_CNT_MAX) * 2 / SPREAD_CNT_MAX) * 2);
 	_moveCnt++;
+
+	_pos += _movePerFrame * static_cast<double>(1 - ((_moveCnt % SPREAD_CNT_MAX) * 2 / SPREAD_CNT_MAX) * 2);
 }

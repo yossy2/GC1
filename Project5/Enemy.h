@@ -5,6 +5,9 @@
 
 /* ----------“GƒNƒ‰ƒX--------- */
 
+#define ENYMY_CNT_X 10
+#define ENYMY_CNT_Y 5
+
 // “G‚ÌŽí•Ê
 enum class ENEMY_TYPE
 {

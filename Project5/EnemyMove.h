@@ -4,7 +4,7 @@
 
 /* ----------敵の動き制御クラス--------- */
 
-#define PIT_IN_CNT_MAX 120		// PitIn移動の時の移動時間
+#define PIT_IN_CNT_MAX 60		// PitIn移動の時の移動時間
 #define SIGMOID_CNT_MAX 120		// シグモイド移動の時の移動時間
 #define SPIRAL_CNT_MAX 120		// SPIRAL移動の時の移動時間
 #define SPIRAL_RADIUS 70		// SPIRAL移動の初期半径

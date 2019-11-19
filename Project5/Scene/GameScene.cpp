@@ -13,7 +13,6 @@
 
 GameScene::GameScene()
 {
-	srand(static_cast<unsigned>(time(NULL)));
 	// 画像読み込み
 	lpImageMng.GetID("char", "image/char.png", { 30,32 }, { 10,10 });
 	lpImageMng.GetID("shot", "image/shot.png", { 8,3 }, { 1,2 });
@@ -21,48 +20,58 @@ GameScene::GameScene()
 	lpImageMng.GetID("plBlast", "image/pl_blast.png", { 64,64 }, { 4,1 });
 	auto gameScreenSize = lpSceneMng.GameScreenSize;
 
-	_objList.emplace_back(new Player({ static_cast<double>(lpSceneMng.ScreenCenter.x),
+	_objList.emplace_back(new Player({ static_cast<double>(lpSceneMng.GameScreenSize.x / 2),
 									   static_cast<double>(gameScreenSize.y - 32)},
 									   {0,0})
 	);
 
-
 	// 敵オブジェクト作成
-	for (int y = 0; y < 5; y++)
+	Vector2Dbl eSize = {30.0,32.0};		// 敵のサイズ
+
+	for (int y = 0; y < ENYMY_CNT_Y; y++)
 	{
-		for (int x = 0; x < 10; x++)
+		for (int x = 0; x < ENYMY_CNT_X; x++)
 		{
 			// 移動タイプ設定
 			MoveState tmpMoveState;
 			// WAITはendPosのxに待機フレーム数を設定
-			tmpMoveState.emplace_back(MOVE_TYPE::WAIT, Vector2Dbl{ static_cast<double>(x + y * 10) * 30.0,0.0 });
+			tmpMoveState.emplace_back(MOVE_TYPE::WAIT, Vector2Dbl{ static_cast<double>(x + y * 10) * eSize.x,0.0 });
 
 			// 出てくる順番によって左右、上下位置を変更
 			tmpMoveState.emplace_back(MOVE_TYPE::SIGMOID,
-									  Vector2Dbl{ static_cast<double>((gameScreenSize.x * 2 / 7) + ((1 + x + y * 10) % 2) * (gameScreenSize.x * 3 / 7)) ,
-												  static_cast<double>((gameScreenSize.y * 5 / 6) - (((x + y * 10) % 6) / 4) * SPIRAL_RADIUS * 2)
+									  Vector2Dbl{ static_cast<double>((gameScreenSize.x * 2 / 7) 
+																   + ((1 + x + y * ENYMY_CNT_X) % 2) 
+																   * (gameScreenSize.x * 3 / 7)) ,
+												  static_cast<double>((gameScreenSize.y * 5 / 6)
+																   - (((x + y * ENYMY_CNT_X) % 6) / 4) * SPIRAL_RADIUS * 2)
 									  });
 
 			// SPIRALはendPosに回転の中心座標を設定
 			tmpMoveState.emplace_back(MOVE_TYPE::SPIRAL,
-				Vector2Dbl{ static_cast<double>((gameScreenSize.x * 2 / 7) + ((1 + x + y * 10) % 2) * (gameScreenSize.x * 3 / 7)) ,
-				static_cast<double>((gameScreenSize.y * 5 / 6) - SPIRAL_RADIUS)
-				});
+									  Vector2Dbl{ static_cast<double>((gameScreenSize.x * 2 / 7) 
+																   + ((1 + x + y * ENYMY_CNT_X) % 2) 
+																   * (gameScreenSize.x * 3 / 7)) ,
+												  static_cast<double>((gameScreenSize.y * 5 / 6) - SPIRAL_RADIUS)
+												});
 
 			tmpMoveState.emplace_back(MOVE_TYPE::PIT_IN, 
-									  Vector2Dbl{ (30.0 + 10.0) * static_cast<double>(x) + 15.0,
-									              (32.0 + 3.0) * static_cast<double>(y) + 16.0 + 40.0
+									  Vector2Dbl{ (eSize.x + 10.0) * static_cast<double>(x) + 15.0,
+									              (eSize.y + 3.0) * static_cast<double>(y) + (eSize.y / 2.0) + 40.0
 									  });
 
 			// LRはendPosのxに終了までのフレーム数を入れる
 			tmpMoveState.emplace_back(MOVE_TYPE::LR, 
-									  Vector2Dbl{ static_cast<double>((5 * 10 - (x + y * 10) - 1) * 30.0),
+									  Vector2Dbl{ static_cast<double>((5 * 10 - (x + y * 10) - 1) * eSize.x),
 												  0.0 
 									  });
 
 			tmpMoveState.emplace_back(MOVE_TYPE::SPREAD,
-				Vector2Dbl{ static_cast<double>((lpSceneMng.GameScreenSize.x / 10) * x + 15.0),
-							(42.0) * static_cast<double>(y) + 16.0
+									  Vector2Dbl{ static_cast<double>(((lpSceneMng.GameScreenSize.x 
+																    - static_cast<int>(eSize.x)) * x / 9)
+																    + eSize.x / 2.0),
+																	  ((eSize.y + 3.0) 
+																    * static_cast<double>(y * lpSceneMng.GameScreenSize.x / ((eSize.x + 10.0) * static_cast<double>(ENYMY_CNT_X)))
+																    / static_cast<double>(ENYMY_CNT_Y)) + 16.0 + 40.0
 				});
 
 			// 830:画面の幅+敵オブジェクトの幅
