@@ -66,14 +66,16 @@ GameScene::GameScene()
 												  0.0 
 									  });
 
+
 			tmpMoveState.emplace_back(MOVE_TYPE::SPREAD,
 									  Vector2Dbl{ static_cast<double>(((lpSceneMng.GameScreenSize.x 
 																    - static_cast<int>(eSize.x)) * x / 9)
 																    + eSize.x / 2.0),
-																	  ((eSize.y + 3.0) 
-																    * static_cast<double>(y * lpSceneMng.GameScreenSize.x / ((eSize.x + 10.0) * static_cast<double>(ENYMY_CNT_X)))
-																    / static_cast<double>(ENYMY_CNT_Y)) + 16.0 + 40.0
-				});
+																	((eSize.y + 3.0)
+																		* static_cast<double>(y * lpSceneMng.GameScreenSize.x 
+																			/ ((eSize.x + 10.0)* static_cast<double>(ENYMY_CNT_X))))
+																	+ 16.0 + 40.0
+									  });
 
 			// 830:画面の幅+敵オブジェクトの幅
 			// 268:{(画面下端 - プレイヤーの高さ - 敵の高さの半分) - (画面上端 + 敵の高さの半分)} / 2
