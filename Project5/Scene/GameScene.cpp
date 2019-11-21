@@ -10,6 +10,7 @@
 #include <Player.h>
 #include <Enemy.h>
 #include <EnemyMove.h>
+#include <Bullet.h>
 
 GameScene::GameScene()
 {
@@ -121,4 +122,21 @@ unique_Base GameScene::Update(unique_Base own)
 	);
 
 	return std::move(own);
+}
+
+void GameScene::RunActQue(std::vector<ActQueT> actList)
+{
+	for (auto que : actList)
+	{
+		switch (que.first)
+		{
+		case ACT_QUE::SHOT:
+			_objList.emplace_back(new Bullet(que.second.pos()));
+			break;
+			
+		default:
+			AST();
+			break;
+		}
+	}
 }

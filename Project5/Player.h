@@ -1,6 +1,7 @@
 #pragma once
-#include "Obj.h"
 #include <memory>
+#include <Scene\SceneMng.h>
+#include "Obj.h"
 #include <InputState.h>
 
 /* ----------Ž©‹@ƒNƒ‰ƒX--------- */

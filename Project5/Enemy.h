@@ -1,6 +1,7 @@
 #pragma once
 #include <tuple>
-#include "Obj.h"
+#include <Scene\SceneMng.h>
+#include <Obj.h>
 #include <EnemyMove.h>
 
 /* ----------“GƒNƒ‰ƒX--------- */

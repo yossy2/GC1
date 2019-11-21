@@ -129,6 +129,11 @@ bool Obj::setDead(bool dead)
 	return true;
 }
 
+const Vector2Dbl& Obj::pos(void)
+{
+	return _pos;
+}
+
 bool Obj::isAnimEnd(void)
 {
 	// ---------- 範囲チェック

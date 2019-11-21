@@ -40,7 +40,7 @@ void SceneMng::Run(void)
 							   LAYER::UI
 		});
 		_dbgStartDraw();
-
+		(*_activeScene).RunActQue(std::move(_actList));
 		_activeScene = (*_activeScene).Update(std::move(_activeScene));
 		_frameCnt++;
 		Draw();
@@ -122,6 +122,12 @@ bool SceneMng::AddDrawQue(DrawQueT dQue)
 	}
 	// Que‚ð’Ç‰Á
 	_drawList.emplace_back(dQue);
+	return true;
+}
+
+bool SceneMng::AddActQue(ActQueT aQue)
+{
+	_actList.emplace_back(aQue);
 	return true;
 }
 

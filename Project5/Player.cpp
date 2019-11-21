@@ -27,7 +27,7 @@ void Player::Update(void)
 	(*_input).Update();
 
 	// à⁄ìÆèàóù
-	auto playerMove = [](std::weak_ptr<InputState> keyData,const INPUT_ID id, double& pNum, const int speed)
+	auto playerMove = [](std::weak_ptr<InputState> keyData,const INPUT_ID id, double& pNum, const double speed)
 	{
 		if (!keyData.expired())
 		{
@@ -42,6 +42,11 @@ void Player::Update(void)
 	playerMove(_input, INPUT_ID::RIGHT, _pos.x,  _speed);
 	playerMove(_input, INPUT_ID::UP,    _pos.y, -_speed);
 	playerMove(_input, INPUT_ID::DOWN,  _pos.y,  _speed);
+
+	if ((*_input).state(INPUT_ID::BTN_1).first && !(*_input).state(INPUT_ID::BTN_1).second)
+	{
+		lpSceneMng.AddActQue({ ACT_QUE::SHOT,*this });
+	}
 
 }
 

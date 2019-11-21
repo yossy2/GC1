@@ -41,6 +41,9 @@ public:
 	bool isDead(void) { return _dead; }				// 爆発終わってる？
 	bool setDead(bool dead);						// dead::オブジェクトが死亡状態時、爆発が終了しているかの状態
 
+	// 座標get,set
+	const Vector2Dbl& pos(void);
+
 	bool isAnimEnd(void);							// アニメーションが終了しているか
 	bool SetAnim(const STATE key,AnimVector& data);	// アニメーションのデータを登録
 

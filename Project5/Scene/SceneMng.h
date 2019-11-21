@@ -51,6 +51,7 @@ public:
 	void Run(void);
 
 	bool AddDrawQue(DrawQueT dQue);			// 描画queリクエスト
+	bool AddActQue(ActQueT aQue);			// アクションqueリクエスト
 	int frameCnt(void);						// get frameCnt関数
 
 	const Vector2Int ScreenSize;			// 画面サイズ
@@ -65,6 +66,7 @@ private:
 	void Draw(void);
 	std::map<LAYER, int> _screenID;			// 描画スクリーンID格納場所
 	std::vector<DrawQueT> _drawList;		// 描画que格納場所
+	std::vector<ActQueT> _actList;			// アクションQue格納場所
 
 	int _frameCnt;							// フレームが変更されてからのカウント
 
