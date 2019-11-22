@@ -7,7 +7,7 @@ class Bullet :
 {
 public:
 	Bullet();
-	Bullet(Vector2Dbl pos);
+	Bullet(Vector2Dbl pos,UNIT_ID id);
 	~Bullet();
 	void Update(void) override;
 

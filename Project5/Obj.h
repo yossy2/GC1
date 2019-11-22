@@ -17,6 +17,16 @@ enum class STATE
 	MAX,
 };
 
+// オブジェクトの種別
+enum class UNIT_ID
+{
+	NON,
+	PLAYER,
+	ENEMY,
+	PLAYER_BULLET,
+	ENEMY_BULLET,
+};
+
 class Obj;
 
 using AnimVector = std::vector<std::pair<int, unsigned int>>;
@@ -44,6 +54,8 @@ public:
 	// 座標get,set
 	const Vector2Dbl& pos(void);
 
+	const UNIT_ID& unitID(void);
+
 	bool isAnimEnd(void);							// アニメーションが終了しているか
 	bool SetAnim(const STATE key,AnimVector& data);	// アニメーションのデータを登録
 
@@ -57,6 +69,7 @@ protected:
 	bool DestroyProc(void);			// 生存状態確認,死亡状態設定
 	bool _alive;					// 生存してるか(かつ爆発していない)
 	bool _dead;						// 死亡してるか(かつ爆発が終了した)
+	UNIT_ID _unitID;				// 種別
 	Vector2Dbl _pos;				// 座標
 	Vector2Int _size;				// サイズ
 	int _zOrder;					// 描画優先度

@@ -4,9 +4,10 @@ Bullet::Bullet()
 {
 }
 
-Bullet::Bullet(Vector2Dbl pos)
+Bullet::Bullet(Vector2Dbl pos,UNIT_ID id)
 {
 	_pos = pos;
+	_unitID = id;
 	// ¡‚ÍƒvƒŒƒCƒ„[‚¾‚¯‚È‚Ì‚ÅãŒü‚«
 	_rad = -3.1415926 / 2.0;
 	_size = { 8,3 };

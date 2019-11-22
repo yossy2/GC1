@@ -1,7 +1,10 @@
 #pragma once
+#include <functional>
 #include "BaseScene.h"
 
 /* ----------ゲームシーンクラス--------- */
+
+using funcAct = std::function<bool(ActQueT&, std::vector<sharedObj>&)>;
 
 class GameScene :
 	public BaseScene
@@ -13,5 +16,6 @@ public:
 private:
 	void RunActQue(std::vector<ActQueT> actList) override;
 	std::vector<sharedObj> _objList;
+	std::map<ACT_QUE, funcAct> funcQue;
 };
 

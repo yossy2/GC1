@@ -134,6 +134,11 @@ const Vector2Dbl& Obj::pos(void)
 	return _pos;
 }
 
+const UNIT_ID & Obj::unitID(void)
+{
+	return _unitID;
+}
+
 bool Obj::isAnimEnd(void)
 {
 	// ---------- 範囲チェック

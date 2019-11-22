@@ -11,6 +11,7 @@
 #include <Enemy.h>
 #include <EnemyMove.h>
 #include <Bullet.h>
+#include "func\FuncBullet.h"
 
 GameScene::GameScene()
 {
@@ -27,7 +28,7 @@ GameScene::GameScene()
 	);
 
 	// 敵オブジェクト作成
-	Vector2Dbl eSize = {30.0,32.0};		// 敵のサイズ
+	Vector2Dbl cSize = {30.0,32.0};		// キャラクターのサイズ
 
 	for (int y = 0; y < ENYMY_CNT_Y; y++)
 	{
@@ -36,7 +37,7 @@ GameScene::GameScene()
 			// 移動タイプ設定
 			MoveState tmpMoveState;
 			// WAITはendPosのxに待機フレーム数を設定
-			tmpMoveState.emplace_back(MOVE_TYPE::WAIT, Vector2Dbl{ static_cast<double>(x + y * 10) * eSize.x,0.0 });
+			tmpMoveState.emplace_back(MOVE_TYPE::WAIT, Vector2Dbl{ static_cast<double>(x + y * 10) * cSize.x,0.0 });
 
 			// 出てくる順番によって左右、上下位置を変更
 			tmpMoveState.emplace_back(MOVE_TYPE::SIGMOID,
@@ -56,24 +57,24 @@ GameScene::GameScene()
 												});
 
 			tmpMoveState.emplace_back(MOVE_TYPE::PIT_IN, 
-									  Vector2Dbl{ (eSize.x + 10.0) * static_cast<double>(x) + 15.0,
-									              (eSize.y + 3.0) * static_cast<double>(y) + (eSize.y / 2.0) + 40.0
+									  Vector2Dbl{ (cSize.x + 10.0) * static_cast<double>(x) + 15.0,
+									              (cSize.y + 3.0) * static_cast<double>(y) + (cSize.y / 2.0) + 40.0
 									  });
 
 			// LRはendPosのxに終了までのフレーム数を入れる
 			tmpMoveState.emplace_back(MOVE_TYPE::LR, 
-									  Vector2Dbl{ static_cast<double>((5 * 10 - (x + y * 10) - 1) * eSize.x),
+									  Vector2Dbl{ static_cast<double>((5 * 10 - (x + y * 10) - 1) * cSize.x),
 												  0.0 
 									  });
 
 
 			tmpMoveState.emplace_back(MOVE_TYPE::SPREAD,
 									  Vector2Dbl{ static_cast<double>(((lpSceneMng.GameScreenSize.x 
-																    - static_cast<int>(eSize.x)) * x / 9)
-																    + eSize.x / 2.0),
-																	((eSize.y + 3.0)
+																    - static_cast<int>(cSize.x)) * x / 9)
+																    + cSize.x / 2.0),
+																	((cSize.y + 3.0)
 																		* static_cast<double>(y * lpSceneMng.GameScreenSize.x 
-																			/ ((eSize.x + 10.0)* static_cast<double>(ENYMY_CNT_X))))
+																			/ ((cSize.x + 10.0)* static_cast<double>(ENYMY_CNT_X))))
 																	+ 16.0 + 40.0
 									  });
 
@@ -82,7 +83,7 @@ GameScene::GameScene()
 			// 敵のサイズとかマジックナンバー使ってるのでとりあえず画面サイズも
 			EnemyState eState = {
 				ENEMY_TYPE::A,
-				{ -15.0 + (static_cast<double>((x + y * 10) % 2) * (gameScreenSize.x + 30)),
+				{ -15.0 + (static_cast<double>(((x + y * 10) % 2) * (gameScreenSize.x + static_cast<int>(cSize.x)))),
 				   16.0 + (static_cast<double>((((x + y * 10) % 6) / 2) * (gameScreenSize.y - 32 * 2) / 2))},
 				{ 30, 32 } ,
 				tmpMoveState
@@ -133,7 +134,7 @@ void GameScene::RunActQue(std::vector<ActQueT> actList)
 		switch (que.first)
 		{
 		case ACT_QUE::SHOT:
-			_objList.emplace_back(new Bullet(que.second.pos()));
+			FuncBullet()(que, _objList);
 			break;
 			
 		default:
