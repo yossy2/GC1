@@ -5,14 +5,18 @@
 
 Player::Player()
 {
+	_unitID = UNIT_ID::PLAYER;
+
 	Init();
 }
 
 Player::Player(Vector2Dbl pos, Vector2Int size)
 {
-	Init();
+	_unitID = UNIT_ID::PLAYER;
 	_pos = pos;
 	_size = size;
+	Init();
+
 }
 
 void Player::Update(void)

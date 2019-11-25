@@ -12,9 +12,11 @@
 #include <EnemyMove.h>
 #include <Bullet.h>
 #include "func\FuncBullet.h"
+#include "func\FuncCheckHit.h"
 
 GameScene::GameScene()
 {
+	InitFunc();
 	// 画像読み込み
 	lpImageMng.GetID("char", "image/char.png", { 30,32 }, { 10,10 });
 	lpImageMng.GetID("shot", "image/shot.png", { 8,3 }, { 1,2 });
@@ -24,7 +26,7 @@ GameScene::GameScene()
 
 	_objList.emplace_back(new Player({ static_cast<double>(lpSceneMng.GameScreenSize.x / 2),
 									   static_cast<double>(gameScreenSize.y - 32)},
-									   {0,0})
+									   {30,32})
 	);
 
 	// 敵オブジェクト作成
@@ -98,7 +100,6 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-
 }
 
 unique_Base GameScene::Update(unique_Base own)
@@ -127,19 +128,22 @@ unique_Base GameScene::Update(unique_Base own)
 	return std::move(own);
 }
 
+void GameScene::InitFunc(void)
+{
+	_funcQue = { { ACT_QUE::SHOT,FuncBullet() },{ ACT_QUE::HIT_CHECK,FuncCheckHit() } };
+}
+
 void GameScene::RunActQue(std::vector<ActQueT> actList)
 {
 	for (auto que : actList)
 	{
-		switch (que.first)
+		try
 		{
-		case ACT_QUE::SHOT:
-			FuncBullet()(que, _objList);
-			break;
-			
-		default:
+			_funcQue.at(que.first)(que,_objList);
+		}
+		catch (...)
+		{
 			AST();
-			break;
 		}
 	}
 }

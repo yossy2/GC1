@@ -4,6 +4,8 @@
 Enemy::Enemy()
 {
 	_type = ENEMY_TYPE::A;
+	_unitID = UNIT_ID::ENEMY;
+
 	init();
 }
 
@@ -12,6 +14,7 @@ Enemy::Enemy(EnemyState& state)
 	_type = std::get<static_cast<int>(ENEMY_STATE::TYPE)>(state);
 	_pos = std::get<static_cast<int>(ENEMY_STATE::VECTOR)>(state);
 	_size = std::get<static_cast<int>(ENEMY_STATE::SIZE)>(state);
+	_unitID = UNIT_ID::ENEMY;
 
 	// ˆÚ“®î•ñİ’è
 	_moveCtl.SetMoveState(std::get<static_cast<int>(ENEMY_STATE::AIM)>(state),true);

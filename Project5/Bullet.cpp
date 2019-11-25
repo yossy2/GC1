@@ -35,6 +35,9 @@ void Bullet::Update(void)
 	}
 	_pos += _speed * Vector2Dbl{ cos(_rad), sin(_rad) };
 
+	// “–‚½‚è”»’è
+	lpSceneMng.AddActQue({ ACT_QUE::HIT_CHECK,*this });
+
 }
 
 void Bullet::Init(void)

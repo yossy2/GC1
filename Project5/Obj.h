@@ -53,6 +53,7 @@ public:
 
 	// ç¿ïWget,set
 	const Vector2Dbl& pos(void);
+	const Vector2Int& size(void);
 
 	const UNIT_ID& unitID(void);
 
