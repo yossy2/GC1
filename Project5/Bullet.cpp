@@ -20,7 +20,7 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Update(void)
+void Bullet::Update(sharedObj plObj)
 {
 	// €–Sˆ—’†‚Í‰½‚à‚µ‚È‚¢
 	if (DestroyProc())

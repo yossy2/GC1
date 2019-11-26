@@ -21,14 +21,14 @@ Enemy::Enemy(EnemyState& state)
 	init();
 }
 
-void Enemy::Update(void)
+void Enemy::Update(sharedObj plObj)
 {
 	// €–Sˆ—’†‚Í‰½‚à‚µ‚È‚¢
 	if (DestroyProc())
 	{
 		return;
 	}
-	_moveCtl.Update();
+	_moveCtl.Update(plObj);
 }
 
 Enemy::~Enemy()

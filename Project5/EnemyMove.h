@@ -1,12 +1,13 @@
 #pragma once
 #include <vector>
 #include <Vector2.h>
+#include <Obj.h>
 
 /* ----------敵の動き制御クラス--------- */
 
-#define PIT_IN_CNT_MAX 60		// PitIn移動の時の移動時間
-#define SIGMOID_CNT_MAX 120		// シグモイド移動の時の移動時間
-#define SPIRAL_CNT_MAX 120		// SPIRAL移動の時の移動時間
+#define PIT_IN_CNT_MAX 30		// PitIn移動の時の移動時間
+#define SIGMOID_CNT_MAX 60		// シグモイド移動の時の移動時間
+#define SPIRAL_CNT_MAX 60		// SPIRAL移動の時の移動時間
 #define SPIRAL_RADIUS 70		// SPIRAL移動の初期半径
 #define SPREAD_CNT_MAX 120		// 拡散するときの周期
 
@@ -19,6 +20,7 @@ enum class MOVE_TYPE
 	PIT_IN,
 	LR,
 	SPREAD,
+	ATTACK,
 };
 
 // 左右移動の方向
@@ -36,7 +38,7 @@ public:
 	EnemyMove(Vector2Dbl& pos,double& rad);
 	~EnemyMove();
 
-	void Update(void);
+	void Update(sharedObj plObj);
 	bool SetMoveState(MoveState& state, bool newFlag);	// 
 private:
 	void SetMovePrg(void);							// 
@@ -49,6 +51,7 @@ private:
 	void Wait(void);								// 待機(移動なし)
 	void MoveLR(void);								// 左右移動
 	void Spread(void);								// 拡散運動
+	void MoveAttack(void);							// 突撃
 
 	// 移動制御で使う変数
 	// 共通
@@ -75,5 +78,7 @@ private:
 
 	MoveState _aimState;			// 移動タイプとその目標(座標、フレーム、回転角など)のリスト(vector)
 	int _aimCnt;					// _aimStateの何番目か
+
+	Vector2Dbl plPos;				// Updateで渡されたPlayerの座標
 };
 

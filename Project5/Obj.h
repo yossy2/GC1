@@ -36,7 +36,7 @@ class Obj
 {
 public:
 	Obj();
-	virtual void Update(void) = 0;
+	virtual void Update(sharedObj plObj) = 0;
 	void Draw(void);		// アニメーションの描画			
 	void Draw(int id);		// 好きな画像を指定して描画
 	virtual ~Obj();

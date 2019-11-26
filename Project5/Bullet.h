@@ -9,7 +9,7 @@ public:
 	Bullet();
 	Bullet(Vector2Dbl pos,UNIT_ID id);
 	~Bullet();
-	void Update(void) override;
+	void Update(sharedObj plObj) override;
 
 private:
 	void Init(void);

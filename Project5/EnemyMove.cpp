@@ -14,8 +14,9 @@ EnemyMove::~EnemyMove()
 {
 }
 
-void EnemyMove::Update(void)
+void EnemyMove::Update(sharedObj plObj)
 {
+	plPos = (*plObj).pos();
 	if (_enemyMoveType != nullptr)
 	{
 		(this->*_enemyMoveType)();
@@ -44,10 +45,30 @@ bool EnemyMove::SetMoveState(MoveState & state, bool newFlag)
 // 移動タイプ変更
 void EnemyMove::SetMovePrg(void)
 {
+	auto aimRev = [&]() {
+		// 拡大移動を探して再セット
+		for (_aimCnt = 0; _aimCnt < _aimState.size(); _aimCnt++)
+		{
+			if (_aimState[_aimCnt].first == MOVE_TYPE::SPREAD)
+			{
+				return true;
+			}
+		}
+		return false;
+	};
+
 	_aimCnt++;
 	if (_aimCnt >= _aimState.size())
 	{
-		return;
+		if (!aimRev())
+		{
+			return;
+		}
+	}
+
+	if (_pos.y > lpSceneMng.GameScreenSize.y)
+	{
+		_pos.y = -100;
 	}
 
 	// 開始、終了地点設定
@@ -97,6 +118,10 @@ void EnemyMove::SetMovePrg(void)
 	case MOVE_TYPE::SPREAD:
 		_movePerFrame = (_endPos - _startPos) / static_cast<double>(SPREAD_CNT_MAX / 2);
 		_enemyMoveType = &EnemyMove::Spread;
+		break;
+
+	case MOVE_TYPE::ATTACK:
+		_enemyMoveType = &EnemyMove::MoveAttack;
 		break;
 	default:
 		AST();
@@ -252,4 +277,31 @@ void EnemyMove::Spread(void)
 	_moveCnt++;
 
 	_pos += _movePerFrame * static_cast<double>(1 - ((_moveCnt % SPREAD_CNT_MAX) * 2 / SPREAD_CNT_MAX) * 2);
+
+	if (_moveCnt >= SPREAD_CNT_MAX / 2)
+	{
+		SetMovePrg();
+		return;
+	}
+}
+
+void EnemyMove::MoveAttack(void)
+{
+	if (_rad < 3.1415926)
+	{
+		_rad += 3.1415926 / 18.0;
+	}
+	else
+	{
+		_enemyMoveType = &EnemyMove::PitIn;
+
+		_endPos = plPos + Vector2Dbl(0.0, 100.0);
+		_startPos = _pos;
+
+		_length = { (_endPos.x - _startPos.x) ,(_endPos.y - _startPos.y) };
+
+		// 画像の向きの関係上90度足しておく
+		_rad = std::atan2(_length.y, _length.x) + (3.1415926 / 2.0);
+		_movePerFrame = _length / static_cast<double>(PIT_IN_CNT_MAX);
+	}
 }
