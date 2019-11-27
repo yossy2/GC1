@@ -3,7 +3,7 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	SceneMng::GetInstance().Run();
+	lpSceneMng.Run();
 	SceneMng::Destroy();
 	return 0;
 }

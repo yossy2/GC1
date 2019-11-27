@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 #include <tuple>
-#include <common/Vector2.h>
+#include <Vector2.h>
 #include "BaseScene.h"
 #include "LAYER.h"
 

@@ -158,7 +158,7 @@ bool SceneMng::SysInit(void)
 
 	lpImageMng.GetID("frame", "image/frame.png");
 
-	return false;
+	return true;
 }
 
 
