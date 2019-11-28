@@ -104,11 +104,12 @@ bool Obj::state(const STATE key)
 	return true;
 }
 
-bool Obj::setAlive(bool alive)
+bool Obj::alive(bool alive)
 {
 	_alive = alive;
 	if (!_alive)
 	{
+		_zOrder = 10;
 		state(STATE::DEATH);
 	}
 	return true;
@@ -116,9 +117,9 @@ bool Obj::setAlive(bool alive)
 
 // _deadはメンバからしか変更しないからいらないかも
 // _aliveはsetを使ってるからそれに合わせて一応
-bool Obj::setDead(bool dead)
+bool Obj::dead(bool dead)
 {
-	if (isAlive())
+	if (alive())
 	{
 		// 現状爆発が終了した時しか使わないので生存しているときは値を設定しない
 		return false;
@@ -137,6 +138,13 @@ const Vector2Dbl& Obj::pos(void)
 const Vector2Int & Obj::size(void)
 {
 	return _size;
+}
+
+void Obj::exFlag(bool isEX)
+{
+	_exFlag = isEX;
+
+	return;
 }
 
 const UNIT_ID & Obj::unitID(void)
@@ -184,14 +192,14 @@ bool Obj::SetAnim(const STATE key, AnimVector& data)
 // 生存状態確認,死亡状態設定
 bool Obj::DestroyProc(void)
 {
-	if (isAlive())
+	if (alive())
 	{
 		return false;
 	}
 
 	if (isAnimEnd())
 	{
-		setDead(true);
+		dead(true);
 	}
 
 	return true;

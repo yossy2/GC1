@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <time.h>
 #include <algorithm>
 #include <DxLib.h>
 #include <_DebugDispOut.h>
@@ -157,6 +159,8 @@ bool SceneMng::SysInit(void)
 	_dbgSetup(200);
 
 	lpImageMng.GetID("frame", "image/frame.png");
+
+	std::srand(static_cast<unsigned int>(time(NULL)));
 
 	return true;
 }

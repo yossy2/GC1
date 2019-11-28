@@ -1,4 +1,4 @@
-#include <time.h>
+#include <cstdlib>
 #include <algorithm>
 #include <DxLib.h>
 #include <_DebugConOut.h>
@@ -113,8 +113,25 @@ unique_Base GameScene::Update(unique_Base own)
 {
 	auto plObj = std::find_if(_objList.begin(), _objList.end(), [](sharedObj obj) {return (*obj).unitID() == UNIT_ID::PLAYER; });
 
+	// EnemyÇÃçUåÇîªíË
+	auto SelAttack = [](sharedObj obj) {
+		if ((*obj).unitID() == UNIT_ID::ENEMY)
+		{
+			if ((rand() % 3000) == 0)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	};
+
 	for (auto obj : _objList)
 	{
+		if (SelAttack(obj))
+		{
+			(*obj).exFlag(true);
+		}
 		(*obj).Update(*plObj);
 	}
 
@@ -129,7 +146,7 @@ unique_Base GameScene::Update(unique_Base own)
 		std::remove_if(
 			_objList.begin(),
 			_objList.end(),
-			[](sharedObj& obj) {return (*obj).isDead(); }
+			[](sharedObj& obj) {return (*obj).dead(); }
 		),
 		_objList.end()
 	);

@@ -49,10 +49,12 @@ public:
 	Enemy(EnemyState& state);
 	void Update(sharedObj plObj) override;
 
+	void exFlag(bool isEX);
+
 	~Enemy();
 private:
 	void init();
-	EnemyMove _moveCtl{_pos,_rad};		// 個体の移動情報
-	ENEMY_TYPE _type;				// 敵の種類（画像）
+	EnemyMove _moveCtl{_pos,_rad,_exFlag};		// 個体の移動情報
+	ENEMY_TYPE _type;					// 敵の種類（画像）
 };
 

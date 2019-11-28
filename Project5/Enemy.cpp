@@ -31,6 +31,20 @@ void Enemy::Update(sharedObj plObj)
 	_moveCtl.Update(plObj);
 }
 
+void Enemy::exFlag(bool isEX)
+{
+	// ˆÚ“®ƒ^ƒCƒv‚ªŠgU‚Ì‚É‚¾‚¯flag‚ğ—§‚¿ã‚°‚é
+	if (isEX)
+	{
+		if (_moveCtl.GetMoveType() != MOVE_TYPE::SPREAD)
+		{
+			isEX = false;
+		}
+	}
+
+	_exFlag = isEX;
+}
+
 Enemy::~Enemy()
 {
 }

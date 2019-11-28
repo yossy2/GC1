@@ -41,19 +41,19 @@ public:
 	void Draw(int id);		// 好きな画像を指定して描画
 	virtual ~Obj();
 
-	// 状態get,set
-	STATE state(void)const;							// アニメーション状態設定
-	bool state(const STATE key);					// アニメーション状態は？
+	// get,set関数 : 変数名の_を外したのが関数名
+	STATE state(void)const;							
+	bool state(const STATE key);					
 	
-	// 生死状態get,set
-	bool isAlive(void) { return _alive; }			// 生存してる？
-	bool setAlive(bool alive);						// alive::オブジェクトの生存状態
-	bool isDead(void) { return _dead; }				// 爆発終わってる？
-	bool setDead(bool dead);						// dead::オブジェクトが死亡状態時、爆発が終了しているかの状態
+	bool alive(void) { return _alive; }
+	bool alive(bool alive);
+	bool dead(void) { return _dead; }
+	bool dead(bool dead);
 
-	// 座標get,set
 	const Vector2Dbl& pos(void);
 	const Vector2Int& size(void);
+	
+	virtual void exFlag(bool isEX);
 
 	const UNIT_ID& unitID(void);
 
@@ -70,6 +70,7 @@ protected:
 	bool DestroyProc(void);			// 生存状態確認,死亡状態設定
 	bool _alive;					// 生存してるか(かつ爆発していない)
 	bool _dead;						// 死亡してるか(かつ爆発が終了した)
+	bool _exFlag;					// 特殊行動フラグ(Enemy:突撃開始,Player:キャプチャされる,など)
 	UNIT_ID _unitID;				// 種別
 	Vector2Dbl _pos;				// 座標
 	Vector2Int _size;				// サイズ

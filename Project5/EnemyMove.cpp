@@ -4,7 +4,7 @@
 #include <_DebugDispOut.h>
 #include <Scene\SceneMng.h>
 
-EnemyMove::EnemyMove(Vector2Dbl& pos,double& rad) :_pos(pos),_rad(rad)
+EnemyMove::EnemyMove(Vector2Dbl& pos,double& rad,bool& exFlag) :_pos(pos),_rad(rad),_exFlag(exFlag)
 {
 	_enemyMoveType = nullptr;
 	_aimCnt = -1;		// 最初に(SetMovePrgで)インクリメントしたときに０にしたいので初期値は-1
@@ -40,6 +40,11 @@ bool EnemyMove::SetMoveState(MoveState & state, bool newFlag)
 	}
 
 	return false;
+}
+
+MOVE_TYPE EnemyMove::GetMoveType(void)
+{
+	return _aimState[_aimCnt].first;
 }
 
 // 移動タイプ変更
@@ -121,6 +126,7 @@ void EnemyMove::SetMovePrg(void)
 		break;
 
 	case MOVE_TYPE::ATTACK:
+		_exFlag = false;
 		_enemyMoveType = &EnemyMove::MoveAttack;
 		break;
 	default:
@@ -278,7 +284,7 @@ void EnemyMove::Spread(void)
 
 	_pos += _movePerFrame * static_cast<double>(1 - ((_moveCnt % SPREAD_CNT_MAX) * 2 / SPREAD_CNT_MAX) * 2);
 
-	if (_moveCnt >= SPREAD_CNT_MAX / 2)
+	if (_exFlag)
 	{
 		SetMovePrg();
 		return;

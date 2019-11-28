@@ -18,8 +18,8 @@ bool FuncCheckHit::operator()(ActQueT & que, std::vector<sharedObj>& objList)
 				&& abs(que.second.pos().x - (*obj).pos().x) < static_cast<double>((que.second.size().y + (*obj).size().x) / 2))
 			{
 				// queのサイズが逆になっているのは弾の向きが90度回転するから。わかりにくいので後でどうにかする
-				(*obj).setAlive(false);
-				que.second.setAlive(false);
+				(*obj).alive(false);
+				que.second.alive(false);
 				return true;
 			}
 		}

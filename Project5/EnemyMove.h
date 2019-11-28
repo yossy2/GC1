@@ -35,13 +35,15 @@ using MoveState = std::vector<std::pair<MOVE_TYPE,Vector2Dbl>>;
 class EnemyMove
 {
 public:
-	EnemyMove(Vector2Dbl& pos,double& rad);
+	EnemyMove(Vector2Dbl& pos,double& rad,bool& exFlag);
 	~EnemyMove();
 
 	void Update(sharedObj plObj);
-	bool SetMoveState(MoveState& state, bool newFlag);	// 
+	bool SetMoveState(MoveState& state, bool newFlag);
+
+	MOVE_TYPE GetMoveType(void);
 private:
-	void SetMovePrg(void);							// 
+	void SetMovePrg(void);							 
 
 	// 移動タイプ関数
 	void (EnemyMove::*_enemyMoveType)(void);		// 移動タイプを切り替えるメンバ関数ポインタ
@@ -75,6 +77,7 @@ private:
 	Vector2Dbl  _posOld;			// 移動前の座標
 
 	double& _rad;					// 敵オブジェクトの向き
+	bool& _exFlag;					// 拡散中に突撃するか
 
 	MoveState _aimState;			// 移動タイプとその目標(座標、フレーム、回転角など)のリスト(vector)
 	int _aimCnt;					// _aimStateの何番目か

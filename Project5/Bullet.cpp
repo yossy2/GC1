@@ -31,7 +31,7 @@ void Bullet::Update(sharedObj plObj)
 	// ‰æ–ÊŠO”»’è
 	if (_pos.y < -_size.x || _pos.y > lpSceneMng.GameScreenSize.y + _size.x)
 	{
-		setAlive(false);
+		alive(false);
 	}
 	_pos += _speed * Vector2Dbl{ cos(_rad), sin(_rad) };
 
