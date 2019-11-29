@@ -35,7 +35,7 @@ using MoveState = std::vector<std::pair<MOVE_TYPE,Vector2Dbl>>;
 class EnemyMove
 {
 public:
-	EnemyMove(Vector2Dbl& pos,double& rad,bool& exFlag);
+	EnemyMove(Vector2Dbl& pos,Vector2Int& size,Vector2Int& num,double& rad,bool& exFlag);
 	~EnemyMove();
 
 	void Update(sharedObj plObj);
@@ -67,14 +67,17 @@ private:
 	double _anglePerFrame;			// 1フレームの移動角度
 	double _moveRadius;				// 円移動の中心からの距離、だんだん短くなる
 
-	// LR
-	static MOVE_LR _moveLR;			// 敵の塊全体の移動方向
+	// Spread
+	static int _firstSprCnt;		// 敵が一斉に拡散運動し始めた時の最初のカウント
 
 	Vector2Dbl _startPos;			// 各移動関数のスタート地点
 	Vector2Dbl _endPos;				// 各移動関数のエンド地点
 
 	Vector2Dbl& _pos;				// 対応している敵オブジェクトの座標
 	Vector2Dbl  _posOld;			// 移動前の座標
+
+	Vector2Int& _size;
+	Vector2Int& _num;
 
 	double& _rad;					// 敵オブジェクトの向き
 	bool& _exFlag;					// 拡散中に突撃するか

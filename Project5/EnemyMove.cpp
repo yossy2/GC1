@@ -3,8 +3,12 @@
 #include <_DebugConOut.h>
 #include <_DebugDispOut.h>
 #include <Scene\SceneMng.h>
+#include <Enemy.h>
 
-EnemyMove::EnemyMove(Vector2Dbl& pos,double& rad,bool& exFlag) :_pos(pos),_rad(rad),_exFlag(exFlag)
+int EnemyMove::_firstSprCnt = 0;
+
+EnemyMove::EnemyMove(Vector2Dbl& pos, Vector2Int& size, Vector2Int& num, double& rad, bool& exFlag) 
+	:_pos(pos),_size(size),_num(num),_rad(rad),_exFlag(exFlag)
 {
 	_enemyMoveType = nullptr;
 	_aimCnt = -1;		// 最初に(SetMovePrgで)インクリメントしたときに０にしたいので初期値は-1
@@ -100,16 +104,44 @@ void EnemyMove::SetMovePrg(void)
 		break;
 
 	case MOVE_TYPE::PIT_IN:
-		// 格納場所は左右に動くので偏差で狙う
-		// 到達するフレームは,移動開始フレーム(ここが呼ばれるのが前の移動の終了時なので,[現在のフレーム数 + 1]) + 移動フレーム数
-		_endPos.x += static_cast<double>(((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % 200)
-				  - (((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % 200) * 2 / 200) 
-			      * 2 * ((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % (200 / 2)));
-		// ここの200は, {500(GameScreenSize.x) - 400(敵が格納されるエリアの横幅40 * 10)} * 2(往復分)
-		// moveLRにも使ってるのでそのうち直そう
+		if (_firstSprCnt == 0)
+		{
+			// 登場時の格納場所は左右に動くので偏差で狙う
+			// 到達するフレームは,移動開始フレーム(ここが呼ばれるのが前の移動の終了時なので,[現在のフレーム数 + 1]) + 移動フレーム数
+			_endPos.x += static_cast<double>(((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % 200)
+				- (((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % 200) * 2 / 200)
+				* 2 * ((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX) % (200 / 2)));
+			// ここの200は, {500(GameScreenSize.x) - 400(敵が格納されるエリアの横幅40 * 10)} * 2(往復分)
+			// moveLRにも使ってるのでそのうち直そう
+		}
+		else
+		{
+			// 突撃後の再登場時は、拡散運動に合わせて狙う
+			Vector2Dbl sprEndPos = { static_cast<double>(((lpSceneMng.GameScreenSize.x
+				- static_cast<int>(_size.x)) * _num.x / 9)
+				+ _size.x / 2.0),
+				((_size.y + 3.0) * static_cast<double>(_num.y * lpSceneMng.GameScreenSize.x / ((_size.x + 10.0)* static_cast<double>(ENEMY_CNT_X))))
+				+ 16.0 + 40.0
+			};
+
+			// まずLRで動いた位置までendPosをプラス
+			_endPos.x += 50.0;
+
+			if (((lpSceneMng.frameCnt() + 1 + PIT_IN_CNT_MAX - _firstSprCnt) % 120) / 60 == 0)
+			{
+				_endPos += ((sprEndPos - _endPos) / static_cast<double>(SPREAD_CNT_MAX / 2))
+					* static_cast<double>((lpSceneMng.frameCnt()+ 1 + PIT_IN_CNT_MAX - _firstSprCnt) % (SPREAD_CNT_MAX / 2));
+			}
+			else
+			{
+				_endPos += ((sprEndPos - _endPos) / static_cast<double>(SPREAD_CNT_MAX / 2))
+					* static_cast<double>(120 - ((lpSceneMng.frameCnt()+ 1 + PIT_IN_CNT_MAX - _firstSprCnt) % (SPREAD_CNT_MAX)));
+			}
+
+		}
 
 		_enemyMoveType = &EnemyMove::PitIn;
-		_length = { (_endPos.x - _startPos.x) ,(_endPos.y - _startPos.y) };
+		_length = _endPos - _startPos;
 
 		// 画像の向きの関係上90度足しておく
 		_rad = std::atan2(_length.y,_length.x) + (3.1415926 / 2.0);
@@ -121,6 +153,15 @@ void EnemyMove::SetMovePrg(void)
 		break;
 
 	case MOVE_TYPE::SPREAD:
+		if (_firstSprCnt == 0)
+		{
+			_firstSprCnt = lpSceneMng.frameCnt();
+		}
+
+		_startPos = Vector2Dbl{ (_size.x + 10.0) * static_cast<double>(_num.x) + 15.0 + 50.0,
+			(_size.y + 3.0) * static_cast<double>(_num.y) + (_size.y / 2.0) + 40.0
+		};
+
 		_movePerFrame = (_endPos - _startPos) / static_cast<double>(SPREAD_CNT_MAX / 2);
 		_enemyMoveType = &EnemyMove::Spread;
 		break;
@@ -280,9 +321,8 @@ void EnemyMove::MoveLR(void)
 // 収縮
 void EnemyMove::Spread(void)
 {
-	_moveCnt++;
 
-	_pos += _movePerFrame * static_cast<double>(1 - ((_moveCnt % SPREAD_CNT_MAX) * 2 / SPREAD_CNT_MAX) * 2);
+	_pos += _movePerFrame * static_cast<double>(1 - (((lpSceneMng.frameCnt() - _firstSprCnt) % SPREAD_CNT_MAX) * 2 / SPREAD_CNT_MAX) * 2);
 
 	if (_exFlag)
 	{
