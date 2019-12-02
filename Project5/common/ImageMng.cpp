@@ -34,9 +34,7 @@ const VecInt & ImageMng::GetID(const std::string & key, const std::string & file
 		{
 			AST();
 		}
-	}
-
-	
+	}	
 
 	return _imgMap[key];
 }
