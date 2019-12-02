@@ -53,12 +53,6 @@ void SceneMng::Draw(void)
 {
 	_dbgAddDraw();
 
-	/*for (auto layer : LAYER())
-	{
-		SetDrawScreen(_screenID[layer]);
-		ClsDrawScreen();
-	}*/
-
 	std::sort(_drawList.begin(), _drawList.end(), 
 		[](DrawQueT queA, DrawQueT queB){
 		return std::tie(std::get<static_cast<int>(DRAW_QUE::LAYER)>(queA), std::get<static_cast<int>(DRAW_QUE::ZORDER)>(queA)) <

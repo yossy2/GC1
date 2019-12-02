@@ -13,24 +13,24 @@ const VecInt & ImageMng::GetID(const std::string & key)
 // Init‚Å‰æ‘œ‚Ì“Ç‚İ‚İ‚ÌÛ‚Ég‚¤(LoadGraph)
 const VecInt & ImageMng::GetID(const std::string & key, const std::string & fileName)
 {
-	if (imgMap.find(key) == imgMap.end())
+	if (_imgMap.find(key) == _imgMap.end())
 	{
-		imgMap[key].resize(1);
-		imgMap[key][0] = LoadGraph(fileName.c_str(),true);
+		_imgMap[key].resize(1);
+		_imgMap[key][0] = LoadGraph(fileName.c_str(),true);
 	}
 
-	return imgMap[key];
+	return _imgMap[key];
 }
 
 // Init‚Å‰æ‘œ‚Ì“Ç‚İ‚İ‚ÌÛ‚Ég‚¤(LoadDivGraph)
 const VecInt & ImageMng::GetID(const std::string & key, const std::string & fileName, const Vector2Int & divSize, const Vector2Int & divCnt)
 {
-	if (imgMap.find(key) == imgMap.end())
+	if (_imgMap.find(key) == _imgMap.end())
 	{
-		imgMap[key].resize(divCnt.x * divCnt.y);
+		_imgMap[key].resize(divCnt.x * divCnt.y);
 
 		if (LoadDivGraph(fileName.c_str(), divCnt.x * divCnt.y, divCnt.x, divCnt.y,
-			divSize.x, divSize.y, &imgMap[key][0], true) == -1)
+			divSize.x, divSize.y, &_imgMap[key][0], true) == -1)
 		{
 			AST();
 		}
@@ -38,7 +38,7 @@ const VecInt & ImageMng::GetID(const std::string & key, const std::string & file
 
 	
 
-	return imgMap[key];
+	return _imgMap[key];
 }
 
 ImageMng::ImageMng()

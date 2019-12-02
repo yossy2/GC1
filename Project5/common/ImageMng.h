@@ -51,6 +51,6 @@ private:
 
 	// –{“–‚Ístring‚ğkey‚É‚·‚é‚Æ“®ì‚ª’x‚­‚È‚é‚Ì‚Åenum‚Æ‚©‚Ì‚Ù‚¤‚ª‚¢‚¢
 	// ö‹Æ‚È‚Ì‚Åstring‚ğg—p‚µ‚Ä‚¢‚é
-	std::map<std::string, VecInt> imgMap;		// ‰æ‘œIDŠi”[êŠ
+	std::map<std::string, VecInt> _imgMap;		// ‰æ‘œIDŠi”[êŠ
 };
 
