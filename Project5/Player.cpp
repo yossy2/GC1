@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include <Scene\SceneMng.h>
 #include "Player.h"
 #include <_DebugConOut.h>
 #include <KeyState.h>

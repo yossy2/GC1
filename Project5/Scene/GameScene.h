@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 #include "BaseScene.h"
-
+#include <Obj.h>
 /* ----------ゲームシーンクラス--------- */
 
 using funcAct = std::function<bool(ActQueT&, std::vector<sharedObj>&)>;
