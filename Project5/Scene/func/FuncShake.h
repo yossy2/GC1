@@ -1,7 +1,8 @@
 #pragma once
 #include <Scene\BaseScene.h>
 
-struct FuncCheckHit
+struct FuncShake
 {
 	bool operator()(ActQueT& que, void* scene);
 };
+

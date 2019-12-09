@@ -111,6 +111,7 @@ bool Obj::alive(bool alive)
 	{
 		_zOrder = 10;
 		state(STATE::DEATH);
+		return false;
 	}
 	return true;
 }

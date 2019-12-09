@@ -13,6 +13,7 @@
 #include <Bullet.h>
 #include "func\FuncBullet.h"
 #include "func\FuncCheckHit.h"
+#include "func\FuncShake.h"
 
 GameScene::GameScene()
 {
@@ -107,6 +108,7 @@ GameScene::GameScene()
 	}
 
 	TRACE("GameScene\n");
+	_shakeCnt = 0;
 }
 
 GameScene::~GameScene()
@@ -155,12 +157,23 @@ unique_Base GameScene::Update(unique_Base own)
 		_objList.end()
 	);
 
+	// ‰æ–Ê—h‚ç‚µ
+	if (_shakeCnt)
+	{
+		_shakeCnt--;
+		_screenPos = { rand() % 10 - 5,rand() % 10 - 5 };
+		if (!_shakeCnt)
+		{
+			_screenPos = { 0,0 };
+		}
+	}
+
 	return std::move(own);
 }
 
 void GameScene::InitFunc(void)
 {
-	_funcQue = { { ACT_QUE::SHOT,FuncBullet() },{ ACT_QUE::HIT_CHECK,FuncCheckHit() } };
+	_funcQue = { { ACT_QUE::SHOT,FuncBullet() },{ ACT_QUE::HIT_CHECK,FuncCheckHit() },{ACT_QUE::SHAKE,FuncShake()} };
 }
 
 void GameScene::RunActQue(std::vector<ActQueT> actList)
@@ -169,7 +182,7 @@ void GameScene::RunActQue(std::vector<ActQueT> actList)
 	{
 		try
 		{
-			_funcQue.at(que.first)(que,_objList);
+			_funcQue.at(que.first)(que,this);
 		}
 		catch (...)
 		{

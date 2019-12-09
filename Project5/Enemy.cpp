@@ -76,3 +76,13 @@ void Enemy::init()
 	// 初期アニメーション
 	state(STATE::NORMAL);
 }
+
+bool Enemy::alive(bool alive)
+{
+	if (!alive)
+	{
+		lpSceneMng.AddActQue({ ACT_QUE::SHAKE,*this });
+	}
+
+	return 	Obj::alive(alive);
+}

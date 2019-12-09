@@ -46,7 +46,7 @@ public:
 	bool state(const STATE key);					
 	
 	bool alive(void) { return _alive; }
-	bool alive(bool alive);
+	virtual bool alive(bool alive);			// 死んだときの処理はオブジェクトごとに変えたいので仮想関数
 	bool dead(void) { return _dead; }
 	bool dead(bool dead);
 

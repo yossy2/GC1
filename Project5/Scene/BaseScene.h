@@ -11,7 +11,8 @@ enum class ACT_QUE
 {
 	NON,
 	SHOT,				// ’e”­Ë
-	HIT_CHECK			// ’e‚Ì“–‚½‚è”»’èA
+	HIT_CHECK,			// ’e‚Ì“–‚½‚è”»’èA
+	SHAKE,				// ‰æ–Ê—h‚ç‚µ
 };
 
 using unique_Base = std::unique_ptr<BaseScene>;
@@ -24,5 +25,6 @@ public:
 	virtual ~BaseScene();
 	virtual unique_Base Update(unique_Base own) = 0;
 	virtual void RunActQue(std::vector<ActQueT> actList);
+	Vector2Int _screenPos;
 };
 

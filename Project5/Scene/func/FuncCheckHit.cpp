@@ -1,15 +1,16 @@
 #include "FuncCheckHit.h"
+#include "../GameScene.h"
 
 // 当たり判定関数オブジェクト 
 // 現状弾の判定のみ、今後敵と自機の判定が追加される可能性あり
-bool FuncCheckHit::operator()(ActQueT & que, std::vector<sharedObj>& objList)
+bool FuncCheckHit::operator()(ActQueT & que, void* scene)
 {
 	// 当たり判定の対象となるオブジェクト
 	UNIT_ID targetID = que.second.unitID() == UNIT_ID::PLAYER_BULLET ?
 					   UNIT_ID::ENEMY :
 					   UNIT_ID::PLAYER;	
 
-	for (auto obj : objList)
+	for (auto obj : ((GameScene*)scene)->_objList)
 	{
 		if ((*obj).unitID() == targetID)
 		{

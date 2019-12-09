@@ -55,6 +55,8 @@ public:
 	~Enemy();
 private:
 	void init();
+	bool alive(bool alive);
+
 	EnemyMove _moveCtl{_pos,_size,_num,_rad,_exFlag};		// 個体の移動情報
 	ENEMY_TYPE _type;					// 敵の種類（画像）
 	Vector2Int _num;					// 敵エリアのどこに配置されるか
