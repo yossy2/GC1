@@ -6,6 +6,7 @@ enum class LAYER
 	BG,
 	CHAR,
 	UI,
+	EX,
 	MAX
 };
 

@@ -17,10 +17,12 @@ enum class DRAW_QUE
 	Y,			// 描画座標Y
 	RAD,		// 回転角
 	ZORDER,		// 描画優先度(奥行)
-	LAYER		// 描画レイヤー
+	LAYER,		// 描画レイヤー
+	DRAW_MODE,	// 描画モード
+	DRAW_NUM	// 描画モードに渡す値
 };
 
-using DrawQueT = std::tuple<int, double, double, double, int, LAYER>;
+using DrawQueT = std::tuple<int, double, double, double, int, LAYER,int,int>;	// DRAW_QUEに対応
 
 class SceneMng
 {
@@ -64,7 +66,7 @@ private:
 	unique_Base _activeScene;
 
 	void Draw(void);
-	std::map<LAYER, int> _screenID;			// 描画スクリーンID格納場所
+	int _layerGID;							// 
 	std::vector<DrawQueT> _drawList;		// 描画que格納場所
 	std::vector<ActQueT> _actList;			// アクションQue格納場所
 

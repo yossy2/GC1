@@ -26,5 +26,13 @@ public:
 	virtual unique_Base Update(unique_Base own) = 0;
 	virtual void RunActQue(std::vector<ActQueT> actList);
 	Vector2Int _screenPos;
+
+protected:
+	void FadeInit(std::string fadeType);
+	bool FadeUpdate(void);
+private:
+	int _fadeScrID;
+	int _fadeCount;
+	std::string _fadeType;
 };
 

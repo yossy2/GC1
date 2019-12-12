@@ -35,11 +35,13 @@ void SceneMng::Run(void)
 		_drawList.clear();
 
 		lpSceneMng.AddDrawQue({IMAGE_ID("frame")[0],
-							   static_cast<double>(ScreenSize.x / 2),
-							   static_cast<double>(ScreenSize.y / 2),
+							   static_cast<double>(ScreenCenter.x),
+							   static_cast<double>(ScreenCenter.y),
 							   0.0,
 							   0,
-							   LAYER::UI
+							   LAYER::UI,
+							   DX_BLENDMODE_NOBLEND,
+							   255
 		});
 		_dbgStartDraw();
 		(*_activeScene).RunActQue(std::move(_actList));
@@ -59,13 +61,18 @@ void SceneMng::Draw(void)
 			   std::tie(std::get<static_cast<int>(DRAW_QUE::LAYER)>(queB), std::get<static_cast<int>(DRAW_QUE::ZORDER)>(queB));
 		});
 
-	// 描画スクリーンを初期化
-	// レイヤー数があまり多くないのでここで毎フレームやる
-	for (auto layer : LAYER())
-	{
-		SetDrawScreen(_screenID[layer]);
-		ClsDrawScreen();
-	}
+	SetDrawScreen(DX_SCREEN_BACK);
+	ClsDrawScreen();
+
+	// 描画レイヤーや描画モードの初期値を設定する
+	LAYER drawLayer = begin(LAYER());
+	int blendMode = DX_BLENDMODE_NOBLEND;
+	int blendModeNum = 255;
+
+	//Queの描画先を設定
+	SetDrawScreen(_layerGID);
+	ClsDrawScreen();
+	SetDrawBlendMode(blendMode, blendModeNum);
 
 	// たまっているQueをそれぞれのレイヤーに描画する
 	for (auto que : _drawList)
@@ -74,11 +81,25 @@ void SceneMng::Draw(void)
 		int id;
 		LAYER layer;
 
-		std::tie(id,x,y,rad,std::ignore,layer) = que;
+		int blendModeOld = blendMode;
+		int blendModeNumOld = blendModeNum;
 
-		if (_screenID[layer] != GetDrawScreen())
+		std::tie(id,x,y,rad,std::ignore,layer,blendMode,blendModeNum) = que;
+
+		// 取り出したQueの内容が前までとLayerもしくは描画形式が違う場合、
+		// 一旦バックバッファに描き出す
+		if ((layer != drawLayer) || (blendModeNumOld != blendMode))
 		{
-			SetDrawScreen(_screenID[layer]);
+			// _layerGIDに書いた内容をバックバッファに描画する
+			SetDrawScreen(DX_SCREEN_BACK);
+			SetDrawBlendMode(blendModeOld, blendModeNumOld);
+			auto layPos = ScreenCenter + (*_activeScene)._screenPos;
+			DrawRotaGraph(layPos.x, layPos.y, 1.0, 0.0, _layerGID, true);
+
+			// 次のQueのための初期化を行い、描画先を一時描画先に設定する
+			SetDrawScreen(_layerGID);
+			SetDrawBlendMode(blendMode, blendModeNum);
+			ClsDrawScreen();
 		}
 
 		DrawRotaGraph(
@@ -91,16 +112,11 @@ void SceneMng::Draw(void)
 			);
 	}
 
-	// それぞれのレイヤーを描画する
+	// for分を抜ける最後の_layerGIDの内容をバックバッファに描き出す
+	// 最後に描画がくるやつはUIかEXで画面を揺らさないので描画位置は画面中央でOK
 	SetDrawScreen(DX_SCREEN_BACK);
-	ClsDrawScreen();
-
-	auto layPos = ScreenCenter + (*_activeScene)._screenPos;
-
-		DrawRotaGraph(layPos.x, layPos.y,1.0,0.0,_screenID[LAYER::BG],true);
-		DrawRotaGraph(layPos.x, layPos.y, 1.0, 0.0, _screenID[LAYER::CHAR], true);
-		DrawRotaGraph(ScreenCenter.x, ScreenCenter.y, 1.0, 0.0, _screenID[LAYER::UI], true);
-
+	SetDrawBlendMode(blendMode, blendModeNum);
+	DrawRotaGraph(ScreenCenter.x, ScreenCenter.y, 1.0, 0.0, _layerGID, true);	
 
 	ScreenFlip();
 }
@@ -141,13 +157,13 @@ bool SceneMng::SysInit(void)
 	}
 
 	// 描画スクリーン作成
-	for (auto layer : LAYER())
-	{
-		_screenID.try_emplace(layer, MakeScreen(ScreenSize.x, ScreenSize.y, true));
-	}
+	_layerGID = MakeScreen(ScreenSize.x, ScreenSize.y, true);
+
 	SetDrawScreen(DX_SCREEN_BACK);
 	_dbgSetup(200);
 
+	lpImageMng.GetID("black", "image/black.png");
+	lpImageMng.GetID("white", "image/white.png");
 	lpImageMng.GetID("frame", "image/frame.png");
 
 	std::srand(static_cast<unsigned int>(time(NULL)));

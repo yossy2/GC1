@@ -57,7 +57,10 @@ void Obj::Draw(void)
 						    _pos.y + static_cast<double>(lpSceneMng.GameScreenOffSet.y),
 							_rad ,
 							_zOrder,
-							LAYER::CHAR});
+							LAYER::CHAR,
+						    DX_BLENDMODE_NOBLEND,
+							255
+	});
 }
 
 void Obj::Draw(int id)
@@ -67,7 +70,9 @@ void Obj::Draw(int id)
 					        _pos.y + static_cast<double>(SceneMng::GetInstance().GameScreenOffSet.y),
 					        _rad,
 							_zOrder,
-							LAYER::CHAR
+							LAYER::CHAR,
+							DX_BLENDMODE_NOBLEND,
+							255
 	});
 }
 

@@ -132,14 +132,18 @@ unique_Base GameScene::Update(unique_Base own)
 		return false;
 	};
 
-	for (auto obj : _objList)
+	if (!FadeUpdate())
 	{
-		if (SelAttack(obj))
+		for (auto obj : _objList)
 		{
-			(*obj).exFlag(true);
+			if (SelAttack(obj))
+			{
+				(*obj).exFlag(true);
+			}
+			(*obj).Update(*plObj);
 		}
-		(*obj).Update(*plObj);
 	}
+
 
 	for (auto obj : _objList)
 	{
