@@ -37,7 +37,7 @@ class Obj
 public:
 	Obj();
 	virtual void Update(sharedObj plObj) = 0;
-	void Draw(void);		// アニメーションの描画			
+	virtual void Draw(void);		// アニメーションの描画			
 	void Draw(int id);		// 好きな画像を指定して描画
 	virtual ~Obj();
 
@@ -60,13 +60,12 @@ public:
 	bool isAnimEnd(void);							// アニメーションが終了しているか
 	bool SetAnim(const STATE key,AnimVector& data);	// アニメーションのデータを登録
 
-private:
+protected:
 	std::map<STATE, AnimVector> _animMap;			// アニメーション格納マップ
 	STATE _state;									// 状態
 	unsigned int _animFrame;						// 現在のコマ数
 	unsigned int _animCount;						// アニメーションが始まってからのフレーム数のカウント
 
-protected:
 	bool DestroyProc(void);			// 生存状態確認,死亡状態設定
 	bool _alive;					// 生存してるか(かつ爆発していない)
 	bool _dead;						// 死亡してるか(かつ爆発が終了した)

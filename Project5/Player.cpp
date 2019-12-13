@@ -55,6 +55,21 @@ void Player::Update(sharedObj plObj)
 
 }
 
+void Player::Draw(void)
+{
+	Obj::Draw();
+
+	SetDrawScreen(_glowID);
+	ClsDrawScreen();
+	SetDrawBright(200 + rand() % 55, 0, 0);
+	DrawRotaGraph(_size.x, _size.y, 1.5, 0, _animMap[state()][_animFrame].first, true);
+	SetDrawBright(255, 255, 255);
+	GraphFilter(_glowID, DX_GRAPH_FILTER_GAUSS, 5, 500);
+	lpSceneMng.AddDrawQue({ _glowID,static_cast<double>(lpSceneMng.GameScreenOffSet.x) + _pos.x,
+							static_cast<double>(lpSceneMng.GameScreenOffSet.y) + _pos.y,
+							_rad,_zOrder - 1,LAYER::CHAR,DX_BLENDMODE_ADD,255 });
+}
+
 
 Player::~Player()
 {
@@ -85,6 +100,8 @@ void Player::Init()
 	// -----------アニメーション登録終了
 
 	_speed = 4.0;
+	_zOrder = 10;
+	_glowID = MakeScreen(_size.x * 2, _size.y * 2, false);
 
 	// 入力状態を管理するunique_ptr作成
 	_input = std::make_shared<KeyState>();
