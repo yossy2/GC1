@@ -117,6 +117,7 @@ GameScene::~GameScene()
 
 unique_Base GameScene::Update(unique_Base own)
 {
+	lpSceneMng.AddDrawQue({IMAGE_ID("black")[0],static_cast<double>(lpSceneMng.ScreenCenter.x),static_cast<double>(lpSceneMng.ScreenCenter.y),0,0,LAYER::BG,DX_BLENDMODE_NOBLEND,255});
 	auto plObj = std::find_if(_objList.begin(), _objList.end(), [](sharedObj obj) {return (*obj).unitID() == UNIT_ID::PLAYER; });
 
 	// EnemyÇÃçUåÇîªíË
